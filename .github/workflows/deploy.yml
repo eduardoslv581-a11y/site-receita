@@ -22,7 +22,7 @@ jobs:
       - name: Compactar arquivos do site
         uses: actions/upload-pages-artifact@v3
         with:
-          path: '.' # Envia o index.html, style.css e script.js da raiz
+          path: '.'
 
       - name: Publicar o site
         uses: actions/deploy-pages@v4

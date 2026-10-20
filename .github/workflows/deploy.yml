@@ -1,35 +1,28 @@
-# Nome do fluxo de trabalho mostrado na aba 'Actions' do GitHub
-name: Pipeline de Testes Automáticos
+name: Deploy do Site de Receitas
 
-# Gatilho: define quando este fluxo vai rodar
 on:
   push:
-    branches: [ "main" ] # Roda sempre que houver um push na branch principal
-  pull_request:
-    branches: [ "main" ] # Roda sempre que um Pull Request for aberto para a main
+    branches: [ "principal" ]
 
-# Conjunto de tarefas (Jobs) que serão executadas
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
 jobs:
-  testar-codigo:
-    # O sistema operacional da máquina virtual que o GitHub vai disponibilizar
+  deploy:
     runs-on: ubuntu-latest
-
-    # Sequência de passos a serem executados dentro da máquina virtual
     steps:
-      # Passo 1: Copia o código do seu repositório para dentro da máquina virtual
       - name: Clonar o repositório
         uses: actions/checkout@v4
 
-      # Passo 2: Instala e configura o ambiente Node.js na máquina
-      - name: Configurar o Node.js
-        uses: actions/setup-node@v4
+      - name: Configurar as Páginas do GitHub
+        uses: actions/configure-pages@v4
+
+      - name: Compactar arquivos do site
+        uses: actions/upload-pages-artifact@v3
         with:
-          node-version: '20'
+          path: '.' # Envia o index.html, style.css e script.js da raiz
 
-      # Passo 3: Executa os comandos de terminal para instalar as dependências
-      - name: Instalar dependências
-        run: npm install
-
-      # Passo 4: Executa os seus testes automatizados
-      - name: Executar testes de software
-        run: npm test
+      - name: Publicar o site
+        uses: actions/deploy-pages@v4
